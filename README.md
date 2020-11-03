@@ -10,15 +10,13 @@ Build and Run the containers with:
 
 ```sh
 $ docker-compose up --build
+$ docker-compose run app rails db:migrate
 ```
-### Todos
 
- - Add docker migrate command
+### Gem
 
-License
-----
+The pub/sub approach is built using the gem Wisper
 
-MIT
+### Business
 
-
-**Free Software, Hell Yeah!**
+It is an order management system, the user can paid/cancel orders, each of these actions will triggers different actions that will be handled using the pub/sub approach.
