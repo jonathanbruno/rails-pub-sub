@@ -8,14 +8,19 @@ namespace :rabbitmq do
     conn = Bunny.new("amqp://#{ENV['RABBITMQ_DEFAULT_USER']}:#{ENV['RABBITMQ_DEFAULT_PASS']}@#{ENV['RABBITMQ_HOST']}").tap(&:start)
     ch = conn.create_channel
 
-    puts(' get or create exchange')
+    # ORDER.CANCELED
     ch.fanout('app.order.canceled')
-
-    puts(' get or create queue (note the durable setting)')
     queue = ch.queue('notify_user', durable: true)
-
-    puts(' bind queue to exchange')
     queue.bind('app.order.canceled')
+
+    queue = ch.queue('store_log', durable: true)
+    queue.bind('app.order.canceled')
+
+
+    # PRODUCT CHANGED
+    ch.fanout('app.product.changed')
+    queue = ch.queue('store_log', durable: true)
+    queue.bind('app.product.changed')
 
     conn.close
   end
