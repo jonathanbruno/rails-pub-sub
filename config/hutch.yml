@@ -1,0 +1,4 @@
+mq_username: mqadmin
+mq_password: Admin123XX_
+mq_host: rabbitmq
+mq_api_host: rabbitmq

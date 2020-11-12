@@ -1,0 +1,27 @@
+<% flash.each do |type, msg| %>
+  <div class="alert alert-info">
+    <%= msg %>
+  </div>
+<% end %>
+
+<h1>Listing orders</h1>
+
+<table>
+  <tr>
+    <th>Final Number</th>
+    <th>Status</th>
+    <th>Total</th>
+    <th></th>
+  </tr>
+
+<% @orders.each do |order| %>
+  <tr>
+    <td><%= order.final_number %></td>
+    <td><%= order.status %></td>
+    <td><%= order.total %></td>
+    <% if !order.canceled? %>
+      <td><%= button_to 'Cancel', { controller: "cancel_orders", action: "create", order_id: order.id } , method: :post  %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>

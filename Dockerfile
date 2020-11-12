@@ -19,7 +19,7 @@ RUN apt-get install -qq -y --no-install-recommends \
   nodejs \
   yarn \
   openssh-client \
-  tzdata
+  netcat
 
 # Define WORKDIR
 WORKDIR /var/www/app

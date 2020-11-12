@@ -1,0 +1,1 @@
+Hutch::Logging.logger = ::Logger.new(STDOUT)

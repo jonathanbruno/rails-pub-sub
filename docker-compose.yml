@@ -2,7 +2,6 @@ version: "3"
 services:
   # APP
   app:
-    image: jonathanbruno/thunder-web:latest
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -11,13 +10,43 @@ services:
       DATABASE_PASSWORD: pub_sub_password
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
+      RABBITMQ_DEFAULT_USER: mqadmin
+      RABBITMQ_DEFAULT_PASS: Admin123XX_
+      RABBITMQ_HOST: rabbitmq
     ports:
       - "3000:3000"
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     depends_on:
       - postgres
+      - rabbitmq
     volumes:
       - ./:/var/www/app
+  #hutch:
+  #  build:
+  #    context: .
+  #    dockerfile: ./Dockerfile
+  #  environment:
+  #    DATABASE_USERNAME: pub_sub_user
+  #    DATABASE_PASSWORD: pub_sub_password
+  #    DATABASE_HOST: postgres
+  #    DATABASE_PORT: 5432
+  #    RABBITMQ_DEFAULT_USER: mqadmin
+  #    RABBITMQ_DEFAULT_PASS: Admin123XX_
+  #    RABBITMQ_HOST: rabbitmq
+  #  command: >
+  #    /bin/bash -c "
+  #      while ! nc -z rabbitmq 15672;
+  #      do
+  #        echo sleeping;
+  #        sleep 1;
+  #      done;
+  #      echo 'Connected!(Thanks Mr J)' && rails rabbitmq:setup && bundle exec hutch --config config/hutch.yml
+  #    "
+  #  depends_on:
+  #    - postgres
+  #    - rabbitmq
+  #  volumes:
+  #    - ./:/var/www/app
   postgres:
     image: postgres:9.6.6
     environment:
@@ -28,7 +57,19 @@ services:
       - "5432:5432"
     volumes:
       - "db_data:/var/lib/postgresql/data:cached"
-
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - "amqp_data:/var/lib/rabbitmq"
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=This_is_my_secret_phrase
+      - RABBITMQ_DEFAULT_USER=mqadmin
+      - RABBITMQ_DEFAULT_PASS=Admin123XX_
+      - CLUSTERED=true
 volumes:
   db_data:
+  amqp_data:
 
