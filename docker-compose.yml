@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment:
+      DATABASE_NAME: db_pub_sub
       DATABASE_USERNAME: pub_sub_user
       DATABASE_PASSWORD: pub_sub_password
       DATABASE_HOST: postgres
@@ -21,32 +22,34 @@ services:
       - rabbitmq
     volumes:
       - ./:/var/www/app
-  #hutch:
-  #  build:
-  #    context: .
-  #    dockerfile: ./Dockerfile
-  #  environment:
-  #    DATABASE_USERNAME: pub_sub_user
-  #    DATABASE_PASSWORD: pub_sub_password
-  #    DATABASE_HOST: postgres
-  #    DATABASE_PORT: 5432
-  #    RABBITMQ_DEFAULT_USER: mqadmin
-  #    RABBITMQ_DEFAULT_PASS: Admin123XX_
-  #    RABBITMQ_HOST: rabbitmq
-  #  command: >
-  #    /bin/bash -c "
-  #      while ! nc -z rabbitmq 15672;
-  #      do
-  #        echo sleeping;
-  #        sleep 1;
-  #      done;
-  #      echo 'Connected!(Thanks Mr J)' && rails rabbitmq:setup && bundle exec hutch --config config/hutch.yml
-  #    "
-  #  depends_on:
-  #    - postgres
-  #    - rabbitmq
-  #  volumes:
-  #    - ./:/var/www/app
+  hutch:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      DATABASE_NAME: db_pub_sub
+      DATABASE_USERNAME: pub_sub_user
+      DATABASE_PASSWORD: pub_sub_password
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      RABBITMQ_DEFAULT_USER: mqadmin
+      RABBITMQ_DEFAULT_PASS: Admin123XX_
+      RABBITMQ_HOST: rabbitmq
+    command: >
+      /bin/bash -c "
+        while ! nc -z rabbitmq 15672;
+        do
+          echo sleeping;
+          sleep 1;
+        done;
+        echo 'Connected!(Thanks Mr J)' && rails rabbitmq:setup && bundle exec hutch
+      "
+    # echo 'Connected!(Thanks Mr J)' && rails rabbitmq:setup && bundle exec hutch --config config/hutch.yml
+    depends_on:
+      - postgres
+      - rabbitmq
+    volumes:
+      - ./:/var/www/app
   postgres:
     image: postgres:9.6.6
     environment:

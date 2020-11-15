@@ -1,1 +1,5 @@
-Hutch::Logging.logger = ::Logger.new(STDOUT)
+# Hutch::Logging.logger = ::Logger.new(STDOUT)
+Hutch::Config.set(:mq_username, ENV['RABBITMQ_DEFAULT_USER'])
+Hutch::Config.set(:mq_password, ENV['RABBITMQ_DEFAULT_PASS'])
+Hutch::Config.set(:mq_host, ENV['RABBITMQ_HOST'],)
+Hutch::Config.set(:mq_api_host, ENV['RABBITMQ_API_HOST'])

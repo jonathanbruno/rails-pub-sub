@@ -5,8 +5,8 @@ default: &default
 
 development:
   <<: *default
-  database: db_pub_sub
-  username: pub_sub_user
-  password: pub_sub_password
-  host: postgres
-  port: 5432
+  database: <%= ENV['DATABASE_NAME'] %>
+  username: <%= ENV['DATABASE_USERNAME'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] %>
+  host: <%= ENV['DATABASE_HOST'] || postgres %>
+  port: <%= ENV['DATABASE_PORT'] || 5432 %>
